@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>JavaScript в LiveJournal</title>
+
+    <meta name="description" content="JavaScript в LiveJournal">
+    <meta name="author" content="Valerii Vasin">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+
+  <body>
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+
+      <div class="slides">
+
+        <section>
+          <h2>JavaScript b LiveJournal</h2>
+        </section>
+
+        <section>
+          <h2>Команда</h2>
+          <ul>
+            <li>Perl: 9</li>
+            <li>JS: 3</li>
+            <li>HTML/CSS: 5</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>История проекта</h2>
+          <ul>
+            <li>14 лет</li>
+            <li>Развитие</li>
+            <li>Усложнение структуры кода</li>
+            <li>Смена нескольких поколений разработчиков</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>jQuery UI (Widget factory)</h2>
+          <pre><code data-trim>
+$.widget('lj.colorpicker, $.lj.basicWidget, {
+  options: {
+    selectors: {
+      button: ‘.b-colorpicker-button’ }
+    }
+  },
+
+  _create: function() {
+    $.lj.basicWidget.prototype._create.apply(this);
+  },
+
+  _bindControls: function() {
+    this._el(‘button’).click(this._clickHandler.bind(this));
+  },
+
+  /* ... */
+});
+</code></pre>
+        </section>
+
+        <section>
+          <h2>Минусы</h2>
+          <ul>
+            <li>DOM-зависимость</li>
+            <li>Нет четкой структуры</li>
+            <li>Инициализация</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Декларативные виджеты</h2>
+          <pre><code data-trim>
+<div data-widget="colorpicker" data-widget-options="{...}"></div>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Компонент</h2>
+          <ul>
+            <li>JS</li>
+            <li>CSS</li>
+            <li>HTML-темплейт</li>
+            <li>Языковые переменные (i18n)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Зависимости</h2>
+            <pre><code data-trim>
+LJ::need_res(qw{
+  lib1.js
+  lib2.js
+  widget1.js
+  widget2.js
+  style1.css
+  style2.css
+}); # => &lt;script src="/??lib1.js,lib2.js,widget1.js,widget2.js"...
+    # => &lt;link href="/??style1.css,style2.css"...
+
+LJ::need_string(qw{
+  colorpicker.button.save
+}); # => Site.page.ml['colorpicker.button.save']
+            </code></pre>
+        </section>
+
+<section>
+          <h2>Зависимости</h2>
+<pre><code data-trim>
+# Config
+colorpicker => {
+  js => [
+    'js/color.js',
+    'js/jquery/jquery.lj.colorpicker.js'
+  ],
+  css => [
+      'stc/popup/popupus.css'
+  ],
+  templates => ['templates/Widgets/colorpicker.tmpl'],
+  ml => [
+      'colorpicker.title.new'
+  ]
+}
+# Controller
+LJ::need_res_group('colorpicker')
+</code></pre>
+        </section>
+
+        <section>
+          <h2>Существующие решения</h2>
+          <ul>
+            <li>AMD</li>
+            <li>CommonJS</li>
+            <li>Наш вариант</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Подключение скриптов</h2>
+<pre><code data-trim>
+//= require js/core/string.js
+//= require js/core/object.js
+
+;(function () {
+    'use strict';
+
+    /** Module implementation */
+}());
+</code></pre>
+
+        </section>
+
+        <section>
+          <h2>Подключение шаблонов</h2>
+          <pre><code data-trim>
+/* popup.js */
+
+//= require_template core/popup.html
+          </code></pre>
+          <pre><code data-trim>
+Site.page.templates['core/popup.html'] =
+'<div class="b-popup">&lt;!-- ... --&gt;</div>';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Открытые проблемы</h2>
+          <ul>
+            <li>css</li>
+            <li>i18n</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Backbone</h2>
+          <img src="images/main.png" alt="main.png">
+        </section>
+
+        <section>
+          <h2>AngularJS</h2>
+
+          <ul>
+            <li>Идеология, основные компоненты</li>
+            <li>digest loop</li>
+            <li>scope inheritance (prototypal)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Angular в ЖЖ</h2>
+          <ul>
+            <li>Толстые сервисы, тонкие контроллеры</li>
+            <li>Модульность</li>
+            <li>Никакой сложной логики в шаблонах</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Работа с темплейтами</h2>
+<p>
+  Site.page.templates[...] => $templateCache
+</p>
+<pre><code data-trim>
+//= require js/lib/angular.min.js
+//= require js/core/angular/common.js
+
+//= require_template angular/controlstrip/friend.ng.tmpl
+//= require_template angular/controlstrip/join.ng.tmpl
+
+// add templates module as a dependency
+angular.module('Controlstrip', ['LJ.Templates']);
+</code></pre>
+        </section>
+
+        <section>
+          <h2>i18n</h2>
+<pre><code data-trim>
+//= require js/core/angular/common.js
+//= require_template angular/controlstrip/friend.ng.tmpl
+
+// add directives module as a dependency
+angular.module('Controlstrip', ['LJ.Directives']);
+</code></pre>
+
+<pre><code data-trim>
+<!--  friend.ng.tmpl  -->
+<span lj-ml="users.filters.link.addingroup"></span>
+<input lj-ml="users.filters.link.addingroup" lj-ml-attr="placeholder" />
+
+</code></pre>
+        </section>
+
+        <section>
+          <h2>Взаимодействие с существующим кодом</h2>
+          <ul>
+            <li>ng-app + Формы</li>
+            <li>pushState + $locationProvider</li>
+            <li>Частое использование $apply()</li>
+            <li>html5Mode + ссылки на странице</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Советы</h2>
+          <ul>
+            <li>Чтение исходного кода</li>
+            <li>Понимание концепций: DI, Scope inheritance</li>
+            <li>Angular Batarang + named callbacks</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Написание кода</h2>
+          <ul>
+            <li>Code style</li>
+            <li>JSHint</li>
+            <li>YUIDoc</li>
+            <li>Wiki</li>
+            <li>Changelog</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Рефакторинг</h2>
+          <ul>
+            <li>es5-shim, json3</li>
+            <li>Один namespace: LJ</li>
+            <li>
+              basic.js, livejournal.js:
+              - LJ.String
+              - LJ.Object
+              - LJ.Support
+              - ...
+            </li>
+            <li>Подключение ресурсов "по запросу"</li>
+            <li>Legacy/depracated код</li>
+            <li>Средства: Google Code Search, ack</li>
+            <li>Тестирование</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Тестирование клиентского кода</h2>
+        </section>
+
+        <section>
+          <section>
+            <h2>Модульное тестирование</h2>
+            <h3>(Unit testing)</h3>
+          </section>
+
+          <section>
+            <h3>Специфика проекта</h3>
+          </section>
+
+          <section>
+            <h2>Чего хотелось достичь?</h2>
+            <ul>
+              <li>Работа с реальными браузерами</li>
+              <li>Работа из командной строки</li>
+              <li>Простое включение-отключение тестируемых модулей</li>
+              <li>Работа в режиме реального времени (редактируем тест и видим результат)</li>
+              <li>Интеграция с CI сервером (Jenkins)</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Технологии</h3>
+            <ul>
+              <li>Karma test runner</li>
+              <li>AMD (Asynchronous module definition)</li>
+              <li>Jasmine (Test framework)</li>
+              <li>Grunt</li>
+              <li>VirtualBox</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Демо</h2>
+            <iframe width="640" height="360" src="//www.youtube.com/embed/HMuslzrBLj8" frameborder="0" allowfullscreen></iframe>
+          </section>
+
+          <section>
+            <h2>Workflow</h2>
+            <ol style="font-size: 1.5em; line-height: 2em;">
+              <li style="color: red;">Red</li>
+              <li style="color: green;">Green</li>
+              <li>Refactoring</li>
+            </ol>
+          </section>
+
+        </section>
+
+        <section>
+          <section>
+            <h2>Функциональное тестирование</h2>
+            <h3>(Functional testing)</h3>
+          </section>
+
+          <section>
+            <h2>Технологии</h2>
+            <ul>
+              <li>Grunt</li>
+              <li>CasperJS (PhantomJS)</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Покрытие кода</h2>
+            <h3>(Code coverage)</h3>
+          </section>
+
+          <section>
+            <h2>Зачем?</h2>
+            <img src="images/coverage_fowler.png" width="150%" alt="Coverage">
+          </section>
+
+          <section>
+            <h2>Технологии</h2>
+            <ul>
+              <li>Grunt</li>
+              <li>Karma Test Runner</li>
+              <li>Istanbul</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Просмотр отчета по папке</h3>
+            <img src="images/coverage_dir.png" alt="Coverage">
+          </section>
+
+          <section>
+            <h3>Отчет о покрытии</h3>
+            <img src="images/coverage_file.jpg" alt="Coverage">
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Мониторинг ошибок</h2>
+          </section>
+          <section>
+            <img src="images/logger.png" alt="Logger" />
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Планы</h1>
+            <ul>
+              <li>Continuous Integration</li>
+              <li>Тестирование визуальных регрессий</li>
+              <li>Совершенствование логгера</li>
+              <li>Минификация кода</li>
+              <li>SPA</li>
+              <li>NodeJS на сервере</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h2>Спасибо за внимание!</h2>
+          <ul style="line-height: 1.6em; margin: 25px 0;">
+            <li><a href="https://github.com/agentcooper" target="_blank">@agentcooper</a></li>
+            <li><a href="https://github.com/valeriivasin" target="_blank">@ValeriiVasin</a></li>
+          </ul>
+          <p style="margin-top: 20px;">
+            <a href="http://livejournal.com" target="_blank">http://livejournal.com</a>
+          </p>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/leap/leap.js', async: true }
+          // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
